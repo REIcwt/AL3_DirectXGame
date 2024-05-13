@@ -13,7 +13,7 @@ GameScene::~GameScene() {
 		delete worldTransformBlock;
 	}
 	worldTransformBlocks_.clear();
-	}
+}
 }
 
 void GameScene::Initialize() {
