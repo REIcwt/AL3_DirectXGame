@@ -8,6 +8,7 @@ GameScene::~GameScene() {
 	delete debugCamera_;
 	delete model_;
 	delete player_;
+	delete modelSkydome_;
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 		delete worldTransformBlock;
@@ -29,7 +30,12 @@ void GameScene::Initialize() {
 
 	/// 3D
 	model_ = Model::Create();
-	worldTransform_.Initialize();
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
+	skydome_ = new Skydome;
+	skydome_->Initialize(modelSkydome_, &viewProjection_);
+
+	//make far view 
+	viewProjection_.farZ = 20000.0f;
 	viewProjection_.Initialize();
 
 	// create player
@@ -130,6 +136,10 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 
+	//draw skydome
+	skydome_->Draw();
+
+	//draw blocks
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			if (!worldTransformBlock)
@@ -138,8 +148,6 @@ void GameScene::Draw() {
 		}
 	}
 
-	// player
-	player_->Draw();
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
