@@ -1,6 +1,7 @@
 #include "GameScene.h"
 #include "TextureManager.h"
 #include <cassert>
+#include <string>
 
 GameScene::GameScene() {}
 
@@ -8,6 +9,8 @@ GameScene::~GameScene() {
 	delete debugCamera_;
 	delete model_;
 	delete player_;
+	delete modelSkydome_;
+	delete mapChipField_;
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 		delete worldTransformBlock;
@@ -26,53 +29,25 @@ void GameScene::Initialize() {
 
 	/// 2D
 	textureHandle_ = TextureManager::Load("cube/cube.jpg");
-
 	/// 3D
 	model_ = Model::Create();
-	worldTransform_.Initialize();
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
+	skydome_ = new Skydome;
+	skydome_->Initialize(modelSkydome_, &viewProjection_);
+
+
+	//make far view 
+	viewProjection_.farZ = 20000.0f;
 	viewProjection_.Initialize();
 
 	// create player
 	player_ = new Player();
 	player_->Initialize(/*model_, textureHandle_, &viewProjection_*/);
-
-	// num
-	const uint32_t kNumBlockVirtical = 10;
-	const uint32_t kNumBlockHorizontal = 20;
-	// make map chip
-	int map[kNumBlockVirtical][kNumBlockHorizontal];
-
-	for (uint32_t i = 0; i < kNumBlockVirtical; ++i) {
-		for (uint32_t j = 0; j < kNumBlockHorizontal; ++j) {
-			if ((i + j) % 2 == 0) {
-                map[i][j] = 1;
-            } else {
-                map[i][j] = 0;
-            }
-		}
-	}
-
-
-	// width
-	const float kBlockWidth = 2.0f;
-	const float kBlockHeight = 2.0f;
-	// world change
-	worldTransformBlocks_.resize(kNumBlockVirtical);
-	for (uint32_t i = 0; i < kNumBlockVirtical; ++i) {
-		worldTransformBlocks_[i].resize(kNumBlockHorizontal);
-	}
-
-	// creat
-	for (uint32_t i = 0; i < kNumBlockVirtical; ++i) {
-		for (uint32_t j = 0; j < kNumBlockHorizontal; ++j) {
-			if (map[i][j] == 1) {
-				worldTransformBlocks_[i][j] = new WorldTransform();
-				worldTransformBlocks_[i][j]->Initialize();
-				worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j;
-				worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
-			}
-		}
-	}
+	
+	//mapchip
+	mapChipField_ = new MapChipField;
+	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
+	GenerateBlocks();
 }
 
 void GameScene::Update() {
@@ -130,6 +105,10 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 
+	//draw skydome
+	skydome_->Draw();
+
+	//draw blocks
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			if (!worldTransformBlock)
@@ -138,8 +117,6 @@ void GameScene::Draw() {
 		}
 	}
 
-	// player
-	player_->Draw();
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
