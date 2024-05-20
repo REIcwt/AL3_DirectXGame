@@ -35,14 +35,17 @@ void GameScene::Initialize() {
 	skydome_ = new Skydome;
 	skydome_->Initialize(modelSkydome_, &viewProjection_);
 
+	// create player
+	modelPlayer_ = Model::CreateFromOBJ("Player", true);
+	player_ = new Player();
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2,18);
+	player_->Initialize(modelPlayer_, &viewProjection_, playerPosition);
 
 	//make far view 
 	viewProjection_.farZ = 20000.0f;
 	viewProjection_.Initialize();
 
-	// create player
-	player_ = new Player();
-	player_->Initialize(/*model_, textureHandle_, &viewProjection_*/);
+	
 	
 	//mapchip
 	mapChipField_ = new MapChipField;
@@ -66,6 +69,7 @@ void GameScene::Update() {
 	} else {
 		viewProjection_.UpdateMatrix();
 	}
+	//debugCamera_->Update();
 
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
@@ -75,7 +79,7 @@ void GameScene::Update() {
 			worldTransformBlock->UpdateMatrix();
 		}
 	}
-
+	player_->Update();
 }
 
 void GameScene::Draw() {
@@ -116,7 +120,8 @@ void GameScene::Draw() {
 			model_->Draw(*worldTransformBlock, viewProjection_);
 		}
 	}
-
+	// player
+	player_->Draw();
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
