@@ -59,6 +59,7 @@ void Player::Update() {
 			velocity_ = Add(velocity_, acceleration);
 			// Max speed
 			velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed);
+
 			if (turnTimer_ > 0.0f) {
 				turnTimer_ -= 0.0166f;
 
@@ -88,12 +89,14 @@ void Player::Update() {
 		//down limit
 		velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
 	}
-
+	//
+	worldTransform_.translation_.x += velocity_.x;
+	worldTransform_.translation_.y += velocity_.y;
 	//
 	bool landing = false;
 	//if player touch ground
 	if (velocity_.y<0) {
-		if (worldTransform_.translation_.y<=1.0f) {
+		if (worldTransform_.translation_.y<=2.0f) {
 			landing = true;
 		}
 	}
@@ -105,14 +108,14 @@ void Player::Update() {
 		}
 	} else {
 		if (landing) {
-			worldTransform_.translation_.y = 1.0f;
+			worldTransform_.translation_.y = 2.0f;
 			velocity_.x *= (1.0f - kAttenuationLanding);
 			velocity_.y = 0.0f;
 			onGround_ = true;
 		}
 	}
 
-	worldTransform_.translation_.x += velocity_.x;
+	
 	worldTransform_.UpdateMatrix();
 }
 

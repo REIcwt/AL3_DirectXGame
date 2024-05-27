@@ -38,19 +38,19 @@ private:
 
 	//Speed
 	Vector3 velocity_ = {};
-	static inline const float kAcceleration = 0.01f;
-	static inline const float kAttenuation = 0.08f;
+	static inline const float kAcceleration = 0.02f;
+	static inline const float kAttenuation = 0.1f;
 	static inline const float kLimitRunSpeed = 0.3f;
 
 	//Jump
 	bool onGround_ = true;
 	//Gravity(down)
-	static inline const float kGravityAcceleration = 0.081f;
+	static inline const float kGravityAcceleration = 0.04f;
 	//Max down speed
-	static inline const float kLimitFallSpeed = 0.1f;
+	static inline const float kLimitFallSpeed = 0.5f;
 	//jump initialize speed
-	static inline const float kJumpAcceleration = 0.03f;
-	static inline const float kAttenuationLanding = 0.01f;
+	static inline const float kJumpAcceleration = 0.5f;
+	static inline const float kAttenuationLanding = 0.1f;
 
 	//direction
 	enum class LRDirection {
