@@ -29,6 +29,10 @@ public:
 	/// </summary>
 	void Draw();
 
+	 const WorldTransform& GetWorldTransform() const;
+
+	 const Vector3& GetVelocity() const { return velocity_; }
+
 private:
 	// 3D
 	Model* model_ = nullptr;
@@ -41,6 +45,7 @@ private:
 	static inline const float kAcceleration = 0.02f;
 	static inline const float kAttenuation = 0.1f;
 	static inline const float kLimitRunSpeed = 0.3f;
+	//
 
 	//Jump
 	bool onGround_ = true;

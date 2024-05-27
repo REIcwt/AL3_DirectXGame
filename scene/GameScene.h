@@ -13,7 +13,8 @@
 #include "DebugCamera.h"
 #include "Skydome.h"
 #include"MapChipField.h"
-
+#include "TextureManager.h"
+#include "CameraController.h"
 
 /// <summary>
 /// ゲームシーン
@@ -101,6 +102,8 @@ private: // メンバ変数
 	//Cam
 	bool isDebugCameraActive_ = false;
 	DebugCamera* debugCamera_ = nullptr;
+	CameraController* cameraController_ = nullptr;
+
 
 	/// <summary>
 	/// ゲームシーン用

@@ -119,4 +119,6 @@ void Player::Update() {
 	worldTransform_.UpdateMatrix();
 }
 
+const WorldTransform& Player::GetWorldTransform() const { return worldTransform_; }
+
 void Player::Draw() { model_->Draw(worldTransform_, *viewProjection_); }

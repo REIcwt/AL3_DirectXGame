@@ -11,6 +11,8 @@ GameScene::~GameScene() {
 	delete player_;
 	delete modelSkydome_;
 	delete mapChipField_;
+	delete cameraController_;
+
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 		delete worldTransformBlock;
@@ -41,11 +43,16 @@ void GameScene::Initialize() {
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2,18);
 	player_->Initialize(modelPlayer_, &viewProjection_, playerPosition);
 
+	//cameraController
+	cameraController_ = new CameraController();
+	cameraController_->Initialize(&viewProjection_, playerPosition);
+	cameraController_->SetTarget(player_);
+	Rect movableArea = {0, 100, 0, 100};
+	cameraController_->SetMovableArea(movableArea);
+
 	//make far view 
 	viewProjection_.farZ = 20000.0f;
 	viewProjection_.Initialize();
-
-	
 	
 	//mapchip
 	mapChipField_ = new MapChipField;
@@ -67,6 +74,7 @@ void GameScene::Update() {
 		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
 		viewProjection_.TransferMatrix();
 	} else {
+		cameraController_->Update();
 		viewProjection_.UpdateMatrix();
 	}
 	//debugCamera_->Update();
