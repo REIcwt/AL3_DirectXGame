@@ -6,6 +6,8 @@
 #include "cassert"
 #include<numbers>
 
+class MapChipField;
+
 class Player {
 public:
 	Player();
@@ -29,9 +31,30 @@ public:
 	/// </summary>
 	void Draw();
 
+	 void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
+
 	 const WorldTransform& GetWorldTransform() const;
 
 	 const Vector3& GetVelocity() const { return velocity_; }
+
+	 ///
+	 struct CollisionMapInfo {
+		 bool ceilingFlag = false;
+		 bool groundFlag = false;
+		 bool wallContactFlag = false;
+		 Vector3 move;
+	 };
+
+	 void CheckCollisionUp(CollisionMapInfo& info);
+	 void CheckCollisionDown(CollisionMapInfo& info);
+	 void CheckCollisionRight(CollisionMapInfo& info);
+	 void CheckCollisionLeft(CollisionMapInfo& info);
+
+	 static inline const float kWidth = 1.6f;
+	 static inline const float kHeight = 1.6f;
+
+	  const float GetkWidth() const { return kWidth; }
+	 const float GetkHeight() const { return kHeight; }
 
 private:
 	// 3D
@@ -66,4 +89,8 @@ private:
 	float turnFirstRotation_ = 0.0f;
 	float turnTimer_ = 0.0f;
 	static inline const float kTimeTurn = 0.3f;
+
+	//mapchip touch
+	MapChipField* mapChipField_ = nullptr;
+
 };
