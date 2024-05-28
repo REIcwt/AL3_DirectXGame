@@ -31,6 +31,7 @@ private:
 	// block size
 	static inline const float kBlockWidth = 2.0f;
 	static inline const float kBlockHeight = 2.0f;
+	static inline const float kStartX = -22.0f; 
 
 	// block number
 	static inline const uint32_t kNumBlockVirtical = 20;

@@ -99,7 +99,7 @@ private: // メンバ変数
 	Model* modelSkydome_ = nullptr;
 	Model* modelPlayer_ = nullptr;
 
-	//Cam
+	// Cam
 	bool isDebugCameraActive_ = false;
 	DebugCamera* debugCamera_ = nullptr;
 	CameraController* cameraController_ = nullptr;

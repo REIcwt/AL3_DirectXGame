@@ -43,11 +43,11 @@ void GameScene::Initialize() {
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2,18);
 	player_->Initialize(modelPlayer_, &viewProjection_, playerPosition);
 
-	//cameraController
+	// cameraController
 	cameraController_ = new CameraController();
 	cameraController_->Initialize(&viewProjection_, playerPosition);
 	cameraController_->SetTarget(player_);
-	Rect movableArea = {0, 100, 0, 100};
+	Rect movableArea = {0, 154, 0, 154};
 	cameraController_->SetMovableArea(movableArea);
 
 	//make far view 

@@ -3,6 +3,7 @@
 #include "WorldTransform.h"
 #include "Player.h"
 #include "cal.h"
+#include <algorithm>
 
 class Player;
 
@@ -24,7 +25,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(ViewProjection* viewProjection,const Vector3& position);
+	void Initialize(ViewProjection* viewProjection, const Vector3& position);
 
 	/// <summary>
 	/// 毎フレーム処理
@@ -40,14 +41,14 @@ private:
 	// ViewProjection
 	WorldTransform worldTransform_;
 	ViewProjection* viewProjection_;
-	//Player
+	// Player
 	Player* target_ = nullptr;
-	Vector3 targetOffset_ = {0, 0, -15.0f};
+	Vector3 targetOffset_ = {0.0f, 2.0f, -18.0f};
 
-	//cam move area
-	Rect movableArea_ = {0, 100, 0, 100};
+	// cam move area
+	Rect movableArea_ = {0, 154, 0, 154};
 
-	//cameraDestination
+	// cameraDestination
 	Vector3 cameraDestination;
 	static inline const float kInterpolationRate = 0.1f;
 	Vector3 Lerp(const Vector3& start, const Vector3& end, float t);
