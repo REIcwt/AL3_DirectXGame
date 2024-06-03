@@ -37,11 +37,18 @@ void GameScene::Initialize() {
 	skydome_ = new Skydome;
 	skydome_->Initialize(modelSkydome_, &viewProjection_);
 
+	// mapchip
+	mapChipField_ = new MapChipField;
+	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
+	GenerateBlocks();
+
 	// create player
 	modelPlayer_ = Model::CreateFromOBJ("Player", true);
 	player_ = new Player();
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2,18);
 	player_->Initialize(modelPlayer_, &viewProjection_, playerPosition);
+
+	 player_->SetMapChipField(mapChipField_);
 
 	//cameraController
 	cameraController_ = new CameraController();
@@ -53,14 +60,6 @@ void GameScene::Initialize() {
 	//make far view 
 	viewProjection_.farZ = 20000.0f;
 	viewProjection_.Initialize();
-	
-	//mapchip
-	mapChipField_ = new MapChipField;
-	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
-	GenerateBlocks();
-
-	player_->Initialize(modelPlayer_, &viewProjection_, playerPosition);
-	player_->SetMapChipField(mapChipField_);
 }
 
 void GameScene::Update() {

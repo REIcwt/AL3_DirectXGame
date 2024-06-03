@@ -31,32 +31,13 @@ public:
 	/// </summary>
 	void Draw();
 
-	 void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
-
 	 const WorldTransform& GetWorldTransform() const;
 
 	 const Vector3& GetVelocity() const { return velocity_; }
 
-	 ///
-	 struct CollisionMapInfo {
-		 bool ceilingFlag = false;
-		 bool groundFlag = false;
-		 bool wallContactFlag = false;
-		 Vector3 move;
-	 };
+	  void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
 
-	 void CheckCollisionUp(CollisionMapInfo& info);
-	 void CheckCollisionDown(CollisionMapInfo& info);
-	 void CheckCollisionRight(CollisionMapInfo& info);
-	 void CheckCollisionLeft(CollisionMapInfo& info);
-
-	 static inline const float kWidth = 1.6f;
-	 static inline const float kHeight = 1.6f;
-
-	  const float GetkWidth() const { return kWidth; }
-	 const float GetkHeight() const { return kHeight; }
-
-private:
+  private:
 	// 3D
 	Model* model_ = nullptr;
 	// ViewProjection
@@ -90,7 +71,33 @@ private:
 	float turnTimer_ = 0.0f;
 	static inline const float kTimeTurn = 0.3f;
 
-	//mapchip touch
+	//
 	MapChipField* mapChipField_ = nullptr;
+	static inline const float kWidth = 0.8f;
+	static inline const float kHeight = 0.8f;
+
+	struct CollisionMapInfo {
+		bool isCeilingCollision = false;
+		bool isGroundCollision = false;
+		bool isWallCollision = false;
+		Vector3 move;
+	};
+	void CheckCollision(CollisionMapInfo& info);
+
+	void CheckCollisionTop(CollisionMapInfo& info);
+	void CheckCollisionBottom(CollisionMapInfo& info);
+	void CheckCollisionLeft(CollisionMapInfo& info);
+	void CheckCollisionRight(CollisionMapInfo& info);
+
+	enum Corner {
+		kRightBottom,
+		kLeftBottom,
+		kRightTop,
+		kLeftTop,
+
+		kNumCorner
+	};
+
+	Vector3 CornerPosition(const Vector3& center, Corner corner) const;
 
 };
