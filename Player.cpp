@@ -5,6 +5,7 @@
 #include "Input.h"
 #include <array>
 #include "MapChipField.h"
+#include "DebugCamera.h"
 
 Player::Player(){};
 Player::~Player(){};
@@ -16,13 +17,16 @@ void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vect
 	viewProjection_ = viewProjection;
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
-	worldTransform_.rotation_.y = std::numbers::pi_v<float> / -2.0f;
+	worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f;
 }
 
 void Player::Update() {
 	CollisionMapInfo collisionMapInfo;
 	collisionMapInfo.move = velocity_;
 	CheckCollision(collisionMapInfo);
+	ReflectCollisionResult(collisionMapInfo);
+	HandleCeilingCollision(collisionMapInfo);
+
 	//control move
 	if (onGround_) {
 		// LEFT RIGHT
@@ -158,6 +162,14 @@ void Player::CheckCollisionTop(CollisionMapInfo& info) {
 	if (mapChipType == MapChipType::kBlock) {
 		hit = true;
 	}
+
+	 if (hit) {
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
+		MapChipField::Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
+		info.move.y = std::max(0.0f, rect.bottom - worldTransform_.translation_.y);
+
+		info.isCeilingCollision = true;
+	}
 }
 //bottom
 void Player::CheckCollisionBottom(CollisionMapInfo& info) {
@@ -193,6 +205,17 @@ Vector3 Player::CornerPosition(const Vector3& center, Corner corner) const {
 	};
 
 	return Add(center, offsetTable[static_cast<uint32_t>(corner)]);
+}
+
+void Player::ReflectCollisionResult(const CollisionMapInfo& info) { 
+	worldTransform_.translation_ = Add(worldTransform_.translation_, info.move); 
+}
+
+void Player::HandleCeilingCollision(const CollisionMapInfo& info) {
+	if (info.isCeilingCollision) {
+		///DebugText::GetInstance()->ConsolePrintf("hit ceiling\n");
+		velocity_.y = 0;
+	}
 }
 
 const WorldTransform& Player::GetWorldTransform() const { return worldTransform_; }

@@ -43,7 +43,7 @@ void GameScene::Initialize() {
 	GenerateBlocks();
 
 	// create player
-	modelPlayer_ = Model::CreateFromOBJ("Player", true);
+	modelPlayer_ = Model::CreateFromOBJ("cube", true);
 	player_ = new Player();
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2,18);
 	player_->Initialize(modelPlayer_, &viewProjection_, playerPosition);

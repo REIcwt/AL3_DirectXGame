@@ -73,8 +73,8 @@ public:
 
 	//
 	MapChipField* mapChipField_ = nullptr;
-	static inline const float kWidth = 0.8f;
-	static inline const float kHeight = 0.8f;
+	static inline const float kWidth = 1.6f;
+	static inline const float kHeight = 1.6f;
 
 	struct CollisionMapInfo {
 		bool isCeilingCollision = false;
@@ -99,5 +99,10 @@ public:
 	};
 
 	Vector3 CornerPosition(const Vector3& center, Corner corner) const;
+
+	//
+	 static inline const float kBlank = 0.0f;
+	void ReflectCollisionResult(const CollisionMapInfo& info);
+	 void HandleCeilingCollision(const CollisionMapInfo& info);
 
 };

@@ -42,7 +42,7 @@ private:
 	ViewProjection* viewProjection_;
 	//Player
 	Player* target_ = nullptr;
-	Vector3 targetOffset_ = {0, 0, -15.0f};
+	Vector3 targetOffset_ = {0.0f, 2.0f, -18.0f};
 
 	//cam move area
 	Rect movableArea_ = {0, 100, 0, 100};
