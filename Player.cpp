@@ -17,10 +17,11 @@ void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vect
 	viewProjection_ = viewProjection;
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
-	worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f;
+	worldTransform_.rotation_.y = std::numbers::pi_v<float> / -2.0f;
 }
 
 void Player::Update() {
+
 	CollisionMapInfo collisionMapInfo;
 	collisionMapInfo.move = velocity_;
 	CheckCollision(collisionMapInfo);

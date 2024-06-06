@@ -44,8 +44,8 @@ public:
 		Vector3 center = GetMapChipPositionByIndex(xIndex, yIndex);
 
 		Rect rect;
-		rect.left = center.x - 0;
-		rect.right = center.x + 0;
+		rect.left = center.x - kBlockHeight / 2.0f;
+		rect.right = center.x + kBlockHeight / 2.0f;
 		rect.bottom = center.y - kBlockHeight / 2.0f;
 		rect.top = center.y + kBlockHeight / 2.0f;
 
@@ -60,6 +60,7 @@ private:
 	// block number
 	static inline const uint32_t kNumBlockVirtical = 20;
 	static inline const uint32_t kNumBlockHorizontal = 100;
+	static inline const float kStartX = -22.0f; 
 
 	MapChipData mapChipData_;
 

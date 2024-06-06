@@ -54,11 +54,11 @@ public:
 	//Jump
 	bool onGround_ = true;
 	//Gravity(down)
-	static inline const float kGravityAcceleration = 0.04f;
+	static inline const float kGravityAcceleration = 0.098f;
 	//Max down speed
-	static inline const float kLimitFallSpeed = 0.5f;
+	static inline const float kLimitFallSpeed = 1.0f;
 	//jump initialize speed
-	static inline const float kJumpAcceleration = 0.5f;
+	static inline const float kJumpAcceleration = sqrt(2.0f * kGravityAcceleration * (2 * 2.0f));
 	static inline const float kAttenuationLanding = 0.1f;
 
 	//direction
@@ -73,8 +73,8 @@ public:
 
 	//
 	MapChipField* mapChipField_ = nullptr;
-	static inline const float kWidth = 1.6f;
-	static inline const float kHeight = 1.6f;
+	static inline const float kWidth = 0.8f;
+	static inline const float kHeight = 0.8f;
 
 	struct CollisionMapInfo {
 		bool isCeilingCollision = false;

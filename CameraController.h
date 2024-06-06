@@ -45,7 +45,7 @@ private:
 	Vector3 targetOffset_ = {0.0f, 2.0f, -18.0f};
 
 	//cam move area
-	Rect movableArea_ = {0, 100, 0, 100};
+	Rect movableArea_ = {0, 154, 0, 154};
 
 	//cameraDestination
 	Vector3 cameraDestination;

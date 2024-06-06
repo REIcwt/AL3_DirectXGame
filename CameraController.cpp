@@ -23,6 +23,7 @@ void CameraController::Update(){
 	viewProjection_->translation_ = Lerp(viewProjection_->translation_, cameraDestination, kInterpolationRate);
 
 		 viewProjection_->translation_.x = std::clamp(viewProjection_->translation_.x, movableArea_.left + kCameraMargins.left, movableArea_.right + kCameraMargins.right);
+
 	viewProjection_->translation_.y = std::clamp(viewProjection_->translation_.y, movableArea_.bottom + kCameraMargins.bottom, movableArea_.top + kCameraMargins.top);
 
 		viewProjection_->UpdateMatrix();
