@@ -35,7 +35,7 @@ public:
 
 	 const Vector3& GetVelocity() const { return velocity_; }
 
-	  void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
+	 void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
 
   private:
 	// 3D
