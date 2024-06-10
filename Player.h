@@ -35,7 +35,7 @@ public:
 
 	 const Vector3& GetVelocity() const { return velocity_; }
 
-	  void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
+	 void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
 
   private:
 	// 3D
@@ -59,7 +59,9 @@ public:
 	static inline const float kLimitFallSpeed = 1.0f;
 	//jump initialize speed
 	static inline const float kJumpAcceleration = sqrt(2.0f * kGravityAcceleration * (2 * 2.0f));
+
 	static inline const float kAttenuationLanding = 0.1f;
+	static inline const float kCollisionEpsilon = 0.1f;
 
 	//direction
 	enum class LRDirection {
@@ -88,6 +90,8 @@ public:
 	void CheckCollisionBottom(CollisionMapInfo& info);
 	void CheckCollisionLeft(CollisionMapInfo& info);
 	void CheckCollisionRight(CollisionMapInfo& info);
+
+	void SwitchGroundState(const CollisionMapInfo& info);
 
 	enum Corner {
 		kRightBottom,
