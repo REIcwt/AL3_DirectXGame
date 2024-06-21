@@ -275,6 +275,13 @@ static Vector3 Add3(const Vector3& v1, const Vector3& v2, const Vector3& v3) {
 }
 #pragma endregion
 
+#pragma region Subtract
+
+static Vector3 Subtract(const Vector3& v1, const Vector3& v2) { return {v1.x - v2.x, v1.y - v2.y, v1.z - v2.z}; }
+
+#pragma endregion
+
+
 #pragma region Vector3 x float
 static Vector3 MultiplyVF(const Vector3& v, float scalar) {
 	return {v.x * scalar, v.y * scalar, v.z * scalar}; 
