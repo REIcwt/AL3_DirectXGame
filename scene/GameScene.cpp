@@ -13,6 +13,12 @@ GameScene::~GameScene() {
 	delete modelSkydome_;
 	delete mapChipField_;
 	delete cameraController_;
+	delete deathParticles_;
+
+	for (Enemy* enemy : enemies_) {
+		delete enemy;
+	}
+	enemies_.clear();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -54,8 +60,18 @@ void GameScene::Initialize() {
 	 // Enemy
 	 enemy_ = new Enemy;
 	 enemyModel_ = Model::CreateFromOBJ("enemy", true);
-	 Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10, 18);
-	 enemy_->Initialize(enemyModel_, &viewProjection_, enemyPosition);
+	 for (int32_t i = 0; i < kEnemyNum; i++) {
+		 Enemy* newEnemy = new Enemy;
+		 Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10 + (i * 2), 18);
+		 newEnemy->Initialize(enemyModel_, &viewProjection_, enemyPosition);
+
+		 enemies_.push_back(newEnemy);
+	 }
+
+	 //
+	 deathParticles_ = new DeathParticles;
+	 deathParticlesModel_ = Model::CreateFromOBJ("DeathParticles", true);
+	 deathParticles_->Initialize(deathParticlesModel_, &viewProjection_, playerPosition);
 
 	//cameraController
 	cameraController_ = new CameraController();
@@ -97,7 +113,34 @@ void GameScene::Update() {
 		}
 	}
 	player_->Update();
-	enemy_->Update();
+
+	for (Enemy* enemy : enemies_) {
+		enemy->Update();
+	}
+
+	CheckAllCollision();
+
+	if (deathParticles_) {
+		deathParticles_->Update();
+	}
+}
+
+void GameScene::CheckAllCollision() {
+#pragma region player to enemy collision
+	AABB aabb1, aabb2;
+
+	aabb1 = player_->GetAABB();
+
+	for (Enemy* enemy : enemies_) {
+		aabb2 = enemy->GetAABB();
+
+		if (IsCollision(aabb1, aabb2)) {
+			player_->OnCollision(enemy);
+			enemy->OnCollision(player_);
+		}
+	}
+
+#pragma endregion
 }
 
 void GameScene::Draw() {
@@ -141,8 +184,12 @@ void GameScene::Draw() {
 	// player
 	player_->Draw();
 	//enemy
-	enemy_->Draw();
-
+	for (Enemy* enemy : enemies_) {
+		enemy->Draw();
+	}
+	if (deathParticles_) {
+		deathParticles_->Draw();
+	}
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion
