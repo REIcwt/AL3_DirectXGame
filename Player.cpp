@@ -343,6 +343,32 @@ void Player::Update() {
 	worldTransform_.UpdateMatrix();
 }
 
+const Vector3 Player::GetWorldPosition() {
+	Vector3 worldPos{};
+
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+
+	return worldPos;
+}
+
+const AABB Player::GetAABB() { 
+	Vector3 worldPos = GetWorldPosition();
+
+	AABB aabb{};
+
+	aabb.min = {worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2.0f, worldPos.z - kWidth / 2.0f};
+	aabb.max = {worldPos.x + kWidth / 2.0f, worldPos.y + kHeight / 2.0f, worldPos.z + kWidth / 2.0f};
+
+	return aabb;
+}
+
+void Player::OnCollision(const Enemy* enemy) { 
+	(void)enemy; 
+	velocity_ = Add(velocity_, Vector3(0.0f, 1.2f, 0.0f));
+}
+
 const WorldTransform& Player::GetWorldTransform() const { return worldTransform_; }
 
 void Player::Draw() { model_->Draw(worldTransform_, *viewProjection_); }

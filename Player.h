@@ -7,6 +7,7 @@
 #include<numbers>
 
 class MapChipField;
+class Enemy;
 
 class Player {
 public:
@@ -39,6 +40,11 @@ public:
 	 const Vector3& GetVelocity() const { return velocity_; }
 
 	 void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
+
+	 const Vector3 GetWorldPosition();
+	 const AABB GetAABB();
+	 //
+	 void OnCollision(const Enemy* enemy);
 
   private:
 	// 3D
@@ -118,5 +124,14 @@ public:
 	void CollisionResult(const CollisionMapInfo& info);
 	void CeilingCollision(const CollisionMapInfo& info);
 	void WallCollision(const CollisionMapInfo& info);
+
+	///
+
+	///
+
+	
+
+
+
 
 };

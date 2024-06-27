@@ -75,6 +75,8 @@ public: // メンバ関数
 		}
 	};
 
+	void CheckAllCollision();
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -82,8 +84,14 @@ private: // メンバ変数
 
 	// player
 	Player* player_ = nullptr;
+	Model* modelPlayer_ = nullptr;
+
 	// Enemy
 	Enemy* enemy_ = nullptr;
+	Model* enemyModel_ = nullptr;
+	static inline const int32_t kEnemyNum = 3;
+	std::list<Enemy*> enemies_;
+
 	// skydome
 	Skydome* skydome_ = nullptr;
 
@@ -100,8 +108,8 @@ private: // メンバ変数
 
 	Model* model_ = nullptr;
 	Model* modelSkydome_ = nullptr;
-	Model* modelPlayer_ = nullptr;
-	Model* enemyModel_ = nullptr;
+
+	
 
 	//Cam
 	bool isDebugCameraActive_ = false;
