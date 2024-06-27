@@ -19,7 +19,7 @@ public:
 
 private:
 
-	 static inline const float kWalkSpeed = 0.05f;
+	static inline const float kWalkSpeed = 0.05f;
 
 	 //angle from-to 
 	 static inline const float kInitialWalkMotionAngle = -15.0f;
