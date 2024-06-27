@@ -281,9 +281,23 @@ static Vector3 Subtract(const Vector3& v1, const Vector3& v2) { return {v1.x - v
 
 #pragma endregion
 
-
 #pragma region Vector3 x float
 static Vector3 MultiplyVF(const Vector3& v, float scalar) {
 	return {v.x * scalar, v.y * scalar, v.z * scalar}; 
+}
+#pragma endregion
+
+#pragma region AABB
+struct AABB {
+	Vector3 min;
+	Vector3 max;
+	uint32_t color;
+};
+#pragma endregion
+
+#pragma region IsCollision
+
+inline bool IsCollision(const AABB& aabb1, const AABB& aabb2) {
+	return (aabb1.min.x <= aabb2.max.x && aabb1.max.x >= aabb2.min.x) && (aabb1.min.y <= aabb2.max.y && aabb1.max.y >= aabb2.min.y) && (aabb1.min.z <= aabb2.max.z && aabb1.max.z >= aabb2.min.z);
 }
 #pragma endregion

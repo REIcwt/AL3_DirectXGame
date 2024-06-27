@@ -6,6 +6,7 @@
 #include<numbers>
 
 class MapChipField;
+class Player;
 
 class Enemy {
 public:
@@ -17,9 +18,16 @@ public:
 
 	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
 
+	//
+	const Vector3 GetWorldPosition();
+	const AABB GetAABB();
+	//
+	void OnCollision(const Player* player);
+
+
 private:
 
-	 static inline const float kWalkSpeed = 0.05f;
+	static inline const float kWalkSpeed = 0.05f;
 
 	 //angle from-to 
 	 static inline const float kInitialWalkMotionAngle = -15.0f;
@@ -34,6 +42,8 @@ private:
 	//
 	MapChipField* mapChipField_ = nullptr;
 	//
+	static inline const float kWidth = 1.9f;
+	static inline const float kHeight = 1.9f;
 
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;

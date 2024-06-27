@@ -3,9 +3,11 @@
 #include "DebugCamera.h"
 #include "Input.h"
 #include "MapChipField.h"
+#include "DeathParticles.h"
 #include <algorithm>
 #include <array>
 #include <numbers>
+
 
 Player::Player(){};
 Player::~Player(){};
@@ -341,6 +343,35 @@ void Player::Update() {
 	CheckCollision(collisionMapInfo);
 
 	worldTransform_.UpdateMatrix();
+}
+
+const Vector3 Player::GetWorldPosition() {
+	Vector3 worldPos{};
+
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+
+	return worldPos;
+}
+
+const AABB Player::GetAABB() { 
+	Vector3 worldPos = GetWorldPosition();
+
+	AABB aabb{};
+
+	aabb.min = {worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2.0f, worldPos.z - kWidth / 2.0f};
+	aabb.max = {worldPos.x + kWidth / 2.0f, worldPos.y + kHeight / 2.0f, worldPos.z + kWidth / 2.0f};
+
+	return aabb;
+}
+
+void Player::OnCollision(const Enemy* enemy) { 
+	(void)enemy; 
+	if (deathParticles_) {
+		deathParticles_->Update();
+	}
+	isDead_ = true;
 }
 
 const WorldTransform& Player::GetWorldTransform() const { return worldTransform_; }
