@@ -15,6 +15,7 @@
 #include"MapChipField.h"
 #include "TextureManager.h"
 #include "CameraController.h"
+#include "Enemy.h"
 
 /// <summary>
 /// ゲームシーン
@@ -81,6 +82,8 @@ private: // メンバ変数
 
 	// player
 	Player* player_ = nullptr;
+	// Enemy
+	Enemy* enemy_ = nullptr;
 	// skydome
 	Skydome* skydome_ = nullptr;
 
@@ -98,6 +101,7 @@ private: // メンバ変数
 	Model* model_ = nullptr;
 	Model* modelSkydome_ = nullptr;
 	Model* modelPlayer_ = nullptr;
+	Model* enemyModel_ = nullptr;
 
 	//Cam
 	bool isDebugCameraActive_ = false;
