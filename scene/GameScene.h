@@ -16,6 +16,7 @@
 #include "TextureManager.h"
 #include "CameraController.h"
 #include "Enemy.h"
+#include "DeathParticles.h"
 
 /// <summary>
 /// ゲームシーン
@@ -75,15 +76,42 @@ public: // メンバ関数
 		}
 	};
 
-private: // メンバ変数
+	void CheckAllCollision();
+
+	bool IsDead() const { return isDead_; }
+
+private: 
+	
+	enum class Phase {
+		kPlay,
+		kDeath,
+	};
+	Phase phase_;	
+	
+	void ChangePhase(Phase newPhase);
+
+	
+	// メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 
 	// player
 	Player* player_ = nullptr;
+	Model* modelPlayer_ = nullptr;
+	bool isDead_ = false;
+
 	// Enemy
 	Enemy* enemy_ = nullptr;
+	Model* enemyModel_ = nullptr;
+	static inline const int32_t kEnemyNum = 3;
+	std::list<Enemy*> enemies_;
+
+	//
+	DeathParticles* deathParticles_ = nullptr;
+	Model* deathParticlesModel_ = nullptr;
+	bool isDeathParticlesGenerated_ = false;
+
 	// skydome
 	Skydome* skydome_ = nullptr;
 
@@ -100,8 +128,6 @@ private: // メンバ変数
 
 	Model* model_ = nullptr;
 	Model* modelSkydome_ = nullptr;
-	Model* modelPlayer_ = nullptr;
-	Model* enemyModel_ = nullptr;
 
 	//Cam
 	bool isDebugCameraActive_ = false;

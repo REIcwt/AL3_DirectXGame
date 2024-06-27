@@ -5,8 +5,11 @@
 #include "WorldTransform.h"
 #include "cassert"
 #include<numbers>
+#include "DeathParticles.h"
+
 
 class MapChipField;
+class Enemy;
 
 class Player {
 public:
@@ -39,6 +42,13 @@ public:
 	 const Vector3& GetVelocity() const { return velocity_; }
 
 	 void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
+
+	 const Vector3 GetWorldPosition();
+	 const AABB GetAABB();
+	 //
+	 void OnCollision(const Enemy* enemy);
+
+	bool IsDead() const { return isDead_; }
 
   private:
 	// 3D
@@ -118,5 +128,15 @@ public:
 	void CollisionResult(const CollisionMapInfo& info);
 	void CeilingCollision(const CollisionMapInfo& info);
 	void WallCollision(const CollisionMapInfo& info);
+
+	///
+	DeathParticles* deathParticles_ = nullptr;
+	bool isDead_ = false;
+	///
+
+	
+
+
+
 
 };
