@@ -27,7 +27,7 @@ void Player::playerMove() { moveInput(); }
 void Player::moveInput() {
     Vector3 acceleration = {};
 
-    // Horizontal movement control
+	//left-right
     if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
         if (velocity_.x < 0.0f) {
             velocity_.x *= (1.0f - kAcceleration);
@@ -49,7 +49,6 @@ void Player::moveInput() {
             lrDirection_ = LRDirection::kLeft;
         }
     } else {
-        // Apply attenuation when no movement keys are pressed
         if (onGround_) {
             velocity_.x *= (1.0f - kAttenuation);
             if (std::abs(velocity_.x) < 0.01f) {
@@ -57,10 +56,10 @@ void Player::moveInput() {
             }
         }
     }
-
+	//
     velocity_ = Add(velocity_, acceleration);
     velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed);
-
+	//
     if (turnTimer_ > 0.0f) {
         turnTimer_ -= 0.0166f;
         float destinationRotationYTable[]{
@@ -72,7 +71,7 @@ void Player::moveInput() {
         worldTransform_.rotation_.y = std::lerp(turnFirstRotation_, destinationRotationY, easing);
     }
 
-    // Jump control
+    //jump
     if (onGround_) {
         if (Input::GetInstance()->PushKey(DIK_UP)) {
             velocity_.y = kJumpAcceleration;
@@ -82,8 +81,9 @@ void Player::moveInput() {
         velocity_.y -= kGravityAcceleration;
         velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
     }
-
+	//
     bool landing = false;
+
     if (velocity_.y < 0) {
         if (worldTransform_.translation_.y <= 0.0f) {
             worldTransform_.translation_.y = 0.0f;
@@ -96,9 +96,6 @@ void Player::moveInput() {
         onGround_ = true;
     }
 }
-
-
-
 #pragma endregion
 
 Vector3 Player::CornerPosition(const Vector3& center, Corner corner) const {
@@ -349,6 +346,5 @@ void Player::Update() {
 }
 
 const WorldTransform& Player::GetWorldTransform() const { return worldTransform_; }
-
 
 void Player::Draw() { model_->Draw(worldTransform_, *viewProjection_); }
