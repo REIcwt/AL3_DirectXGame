@@ -28,6 +28,8 @@ GameScene::~GameScene() {
 	}
 }
 
+void GameScene::ChangePhase(Phase newPhase) { phase_ = newPhase; }
+
 void GameScene::Initialize() {
 
 	//
