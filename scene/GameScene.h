@@ -80,6 +80,9 @@ public: // メンバ関数
 
 	bool IsDead() const { return isDead_; }
 
+	//cahmge scene
+	bool IsFinished() const { return finished_; }
+
 private: 
 	
 	enum class Phase {
@@ -88,8 +91,10 @@ private:
 	};
 	Phase phase_;	
 	
-	void ChangePhase(Phase newPhase);
-	bool goDeathPhase = false;
+	void ChangePhase();
+
+	// change scene
+	bool finished_ = false;
 	
 	// メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -100,11 +105,12 @@ private:
 	Player* player_ = nullptr;
 	Model* modelPlayer_ = nullptr;
 	bool isDead_ = false;
+	bool playerDead_ = false;
 
 	// Enemy
 	Enemy* enemy_ = nullptr;
 	Model* enemyModel_ = nullptr;
-	static inline const int32_t kEnemyNum = 3;
+	static inline const int32_t kEnemyNum = 1;
 	std::list<Enemy*> enemies_;
 
 	//
@@ -133,8 +139,4 @@ private:
 	DebugCamera* debugCamera_ = nullptr;
 	CameraController* cameraController_ = nullptr;
 
-
-	/// <summary>
-	/// ゲームシーン用
-	/// </summary>
 };

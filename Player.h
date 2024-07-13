@@ -50,6 +50,11 @@ public:
 
 	bool IsDead() const { return isDead_; }
 
+	bool cameraStopY = false;
+	bool cameraStopX = false;
+
+	bool isVisible_ = true;
+
   private:
 	// 3D
 	Model* model_ = nullptr;
@@ -133,10 +138,5 @@ public:
 	DeathParticles* deathParticles_ = nullptr;
 	bool isDead_ = false;
 	///
-
-	
-
-
-
 
 };
