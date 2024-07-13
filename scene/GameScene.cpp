@@ -28,8 +28,6 @@ GameScene::~GameScene() {
 	}
 }
 
-void GameScene::ChangePhase(Phase newPhase) { phase_ = newPhase; }
-
 void GameScene::Initialize() {
 
 	//
@@ -78,11 +76,16 @@ void GameScene::Initialize() {
 	
 
 	//cameraController
-	cameraController_ = new CameraController();
-	cameraController_->Initialize(&viewProjection_, playerPosition);
-	cameraController_->SetTarget(player_);
-	Rect movableArea = {0, 154, 0, 154};
-	cameraController_->SetMovableArea(movableArea);
+	 cameraController_ = new CameraController();
+	 cameraController_->Initialize(&viewProjection_);
+	 CameraController::Rect area_;
+	 area_.left = 0.0f;
+	 area_.right = 200.0f;
+	 area_.bottom = 0.0f;
+	 area_.top = 200.0f;
+	 cameraController_->SetMovableArea(area_);
+	 cameraController_->SetTarget(player_);
+	 cameraController_->Reset();
 
 	//make far view 
 	viewProjection_.farZ = 20000.0f;
@@ -91,13 +94,14 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 
-	#ifdef _DEBUG
+	ChangePhase();
+
+#ifdef _DEBUG
 	if (input_->TriggerKey(DIK_SPACE)) {
 		isDebugCameraActive_ = !isDebugCameraActive_;
 	}
-#endif //debug cam update
 
-	if (isDebugCameraActive_ == true) {
+	if (isDebugCameraActive_) {
 		debugCamera_->Update();
 		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
 		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
@@ -106,11 +110,37 @@ void GameScene::Update() {
 		cameraController_->Update();
 		viewProjection_.UpdateMatrix();
 	}
-	//debugCamera_->Update();
 
+#endif
+	
+	  if (phase_ == Phase::kDeath) {
+        if (cameraController_ && player_) {
+            cameraController_->SetTarget(player_);
+            cameraController_->Update();
+        }
+    }
+
+}
+
+
+void GameScene::CheckAllCollision() {
+#pragma region player to enemy collision
+	AABB aabb1 = player_->GetAABB();
+
+	for (Enemy* enemy : enemies_) {
+		AABB aabb2 = enemy->GetAABB();
+
+		if (IsCollision(aabb1, aabb2)) {
+			player_->OnCollision(enemy);
+			enemy->OnCollision(player_);
+		}
+	}
+#pragma endregion
+}
+
+void GameScene::ChangePhase() {
 	switch (phase_) {
 	case GameScene::Phase::kPlay:
-
 		skydome_->Update();
 		player_->Update();
 
@@ -134,63 +164,55 @@ void GameScene::Update() {
 			deathParticles_->Update();
 		}
 
-		if (IsDead()) {
+		if (player_->IsDead()) {
 			const Vector3& deathParticlesPosition = player_->GetWorldPosition();
 			deathParticles_ = new DeathParticles;
 			deathParticlesModel_ = Model::CreateFromOBJ("DeathParticles", true);
 			deathParticles_->Initialize(deathParticlesModel_, &viewProjection_, deathParticlesPosition);
-			goDeathPhase = true;
-		}
-		if (goDeathPhase) {
+			if (player_) {
+				playerDead_ = true;
+				player_->isVisible_ = false;
+				cameraController_->SetTarget(player_);
+			}
 			phase_ = Phase::kDeath;
 		}
-		
+
 		break;
+
 	case GameScene::Phase::kDeath:
-
 		skydome_->Update();
-		cameraController_->Update();
-
-		for (Enemy* enemy : enemies_) {
-			enemy->Update();
+		if (playerDead_ && cameraController_) {
+			cameraController_->Update();
 		}
 
+		if (enemy_) {
+			for (Enemy* enemy : enemies_) {
+				enemy->Update();
+			}
+		}
 		if (deathParticles_) {
 			deathParticles_->Update();
 		}
+
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
-				if (worldTransformBlock) {
-					worldTransformBlock->UpdateMatrix();
+				if (!worldTransformBlock) {
+					continue;
 				}
+				worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+				worldTransformBlock->TransferMatrix();
 			}
 		}
+
+		if (deathParticles_ && deathParticles_->IsFinished()) {
+			finished_ = true;
+		}
+
 		break;
+
 	default:
 		break;
 	}
-}
-
-void GameScene::ChangePhase(Phase newPhase) { phase_ = newPhase; }
-
-void GameScene::CheckAllCollision() {
-#pragma region player to enemy collision
-	AABB aabb1, aabb2;
-
-	aabb1 = player_->GetAABB();
-
-	for (Enemy* enemy : enemies_) {
-		aabb2 = enemy->GetAABB();
-
-		if (IsCollision(aabb1, aabb2)) {
-			player_->OnCollision(enemy);
-			enemy->OnCollision(player_);
-			ChangePhase(Phase::kDeath);
-			isDead_ = true;
-		}
-	}
-
-#pragma endregion
 }
 
 void GameScene::Draw() {
@@ -232,7 +254,10 @@ void GameScene::Draw() {
 		}
 	}
 	// player
-	player_->Draw();
+	if (player_) {
+		player_->Draw();
+	}
+
 	//enemy
 	for (Enemy* enemy : enemies_) {
 		enemy->Draw();

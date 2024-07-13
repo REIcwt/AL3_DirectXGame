@@ -14,6 +14,8 @@ public:
 
 	void Draw();
 
+	bool IsFinished() const { return isFinished_; }
+
 private:
 	static inline const uint32_t kNumParticles = 8;
 
