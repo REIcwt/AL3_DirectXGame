@@ -11,11 +11,17 @@ void TitleScene::Initialize() {
 	worldTransform_.translation_ = position_;
 	viewProjection_.Initialize();
 	model_ = Model::CreateFromOBJ("title", true);
+
+	/// 3D
+	model_skydome = Model::Create();
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
+	skydome_ = new Skydome;
+	skydome_->Initialize(modelSkydome_, &viewProjection_);
 }
 
 
 void TitleScene::Update() {
-
+	skydome_->Update();
 	time_ += speed_ * 1.0f / 60.0f;
 	worldTransform_.translation_.y = position_.y + amplitude_ * std::sin(time_);
 
@@ -35,6 +41,8 @@ void TitleScene::Draw() {
 	// 3Dオブジェクト描画前処理
 	Model::PreDraw(commandList);
 	model_->Draw(worldTransform_, viewProjection_);
+	// draw skydome
+	skydome_->Draw();
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion

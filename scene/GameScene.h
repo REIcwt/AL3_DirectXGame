@@ -119,7 +119,8 @@ private:
 
 	// skydome
 	Skydome* skydome_ = nullptr;
-
+	Model* model_ = nullptr;
+	Model* modelSkydome_ = nullptr;
 	//mapchip insert
 	MapChipField* mapChipField_;
 
@@ -130,9 +131,6 @@ private:
 	// 3D
 	ViewProjection viewProjection_;
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
-
-	Model* model_ = nullptr;
-	Model* modelSkydome_ = nullptr;
 
 	//Cam
 	bool isDebugCameraActive_ = false;

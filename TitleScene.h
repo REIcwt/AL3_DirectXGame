@@ -7,6 +7,7 @@
 #include <numbers>
 #include <cmath>
 #include <Input.h>
+#include "Skydome.h"
 
 class TitleScene {
 public:
@@ -26,6 +27,11 @@ private:
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
 	Model* model_ = nullptr;
+	// skydome
+	Skydome* skydome_ = nullptr;
+	Model* model_skydome = nullptr;
+	Model* modelSkydome_ = nullptr;
+
 	static inline const Vector3 position_ = {0, 0.0f, -45.0f};
 
 	bool finished_ = false;

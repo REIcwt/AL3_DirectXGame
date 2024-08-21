@@ -75,17 +75,12 @@ void GameScene::Initialize() {
 	 //
 	
 
-	//cameraController
+	// cameraController
 	 cameraController_ = new CameraController();
-	 cameraController_->Initialize(&viewProjection_);
-	 CameraController::Rect area_;
-	 area_.left = 0.0f;
-	 area_.right = 200.0f;
-	 area_.bottom = 0.0f;
-	 area_.top = 200.0f;
-	 cameraController_->SetMovableArea(area_);
+	 cameraController_->Initialize(&viewProjection_, playerPosition);
 	 cameraController_->SetTarget(player_);
-	 cameraController_->Reset();
+	 Rect movableArea = {0, 154, 0, 154};
+	 cameraController_->SetMovableArea(movableArea);
 
 	//make far view 
 	viewProjection_.farZ = 20000.0f;
