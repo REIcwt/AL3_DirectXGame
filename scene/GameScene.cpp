@@ -64,16 +64,56 @@ void GameScene::Initialize() {
 	 // Enemy
 	 enemy_ = new Enemy;
 	 enemyModel_ = Model::CreateFromOBJ("enemy", true);
-	 for (int32_t i = 0; i < kEnemyNum; i++) {
-		 Enemy* newEnemy = new Enemy;
-		 Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10 + (i * 2), 18);
-		 newEnemy->Initialize(enemyModel_, &viewProjection_, enemyPosition);
+	 ///
+	 Enemy* firstEnemy = new Enemy;
+	 Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10, 18);
+	 firstEnemy->Initialize(enemyModel_, &viewProjection_, enemyPosition);
 
-		 enemies_.push_back(newEnemy);
-	 }
+	 firstEnemy->SetMapChipField(mapChipField_);
 
-	 //
-	
+	 enemies_.push_back(firstEnemy);
+	 ///
+	 Enemy* secEnemy = new Enemy;
+	 Vector3 secEnemyPosition = mapChipField_->GetMapChipPositionByIndex(27, 18);
+	 secEnemy->Initialize(enemyModel_, &viewProjection_, secEnemyPosition);
+	 secEnemy->SetMapChipField(mapChipField_);
+
+	 enemies_.push_back(secEnemy);
+	 ///
+	  Enemy* thrdEnemy = new Enemy;
+	 Vector3 thrdEnemyPosition = mapChipField_->GetMapChipPositionByIndex(34, 18);
+	  thrdEnemy->Initialize(enemyModel_, &viewProjection_, thrdEnemyPosition);
+	 thrdEnemy->SetMapChipField(mapChipField_);
+
+	 enemies_.push_back(thrdEnemy);
+	 ///
+	 Enemy* forEnemy = new Enemy;
+	 Vector3 forEnemyPosition = mapChipField_->GetMapChipPositionByIndex(61, 18);
+	 forEnemy->Initialize(enemyModel_, &viewProjection_, forEnemyPosition);
+	 forEnemy->SetMapChipField(mapChipField_);
+
+	 enemies_.push_back(forEnemy);
+	 ///
+	 Enemy* fiveEnemy = new Enemy;
+	 Vector3 fiveEnemyPosition = mapChipField_->GetMapChipPositionByIndex(80, 18);
+	 fiveEnemy->Initialize(enemyModel_, &viewProjection_, fiveEnemyPosition);
+	 fiveEnemy->SetMapChipField(mapChipField_);
+
+	 enemies_.push_back(fiveEnemy);
+	  ///
+	 Enemy* sixEnemy = new Enemy;
+	 Vector3 sixEnemyPosition = mapChipField_->GetMapChipPositionByIndex(95, 18);
+	 sixEnemy->Initialize(enemyModel_, &viewProjection_, sixEnemyPosition);
+	 sixEnemy->SetMapChipField(mapChipField_);
+
+	 enemies_.push_back(sixEnemy);
+
+	 //Goal
+	 goalModel_ = modelPlayer_; 
+	 goalTransform_.Initialize();
+	 goalTransform_.translation_ = mapChipField_->GetMapChipPositionByIndex(98, 18);
+	 goalTransform_.UpdateMatrix();
+
 
 	// cameraController
 	 cameraController_ = new CameraController();
@@ -91,22 +131,22 @@ void GameScene::Update() {
 
 	ChangePhase();
 
-#ifdef _DEBUG
-	if (input_->TriggerKey(DIK_SPACE)) {
-		isDebugCameraActive_ = !isDebugCameraActive_;
-	}
-
-	if (isDebugCameraActive_) {
-		debugCamera_->Update();
-		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
-		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
-		viewProjection_.TransferMatrix();
-	} else {
-		cameraController_->Update();
-		viewProjection_.UpdateMatrix();
-	}
-
-#endif
+//#ifdef _DEBUG
+//	if (input_->TriggerKey(DIK_SPACE)) {
+//		isDebugCameraActive_ = !isDebugCameraActive_;
+//	}
+//
+//	if (isDebugCameraActive_) {
+//		debugCamera_->Update();
+//		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+//		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+//		viewProjection_.TransferMatrix();
+//	} else {
+//		cameraController_->Update();
+//		viewProjection_.UpdateMatrix();
+//	}
+//
+//#endif
 	
 	  if (phase_ == Phase::kDeath) {
         if (cameraController_ && player_) {
@@ -119,19 +159,27 @@ void GameScene::Update() {
 
 
 void GameScene::CheckAllCollision() {
-#pragma region player to enemy collision
-	AABB aabb1 = player_->GetAABB();
+	// Player to enemy collision
+	AABB playerAABB = player_->GetAABB();
 
 	for (Enemy* enemy : enemies_) {
-		AABB aabb2 = enemy->GetAABB();
+		AABB enemyAABB = enemy->GetAABB();
 
-		if (IsCollision(aabb1, aabb2)) {
+		if (IsCollision(playerAABB, enemyAABB)) {
 			player_->OnCollision(enemy);
 			enemy->OnCollision(player_);
 		}
 	}
-#pragma endregion
+
+	// Player to goal collision
+	AABB goalAABB;
+	goalAABB.min = goalTransform_.translation_ ;
+	goalAABB.max = goalTransform_.translation_ ;
+	if (IsCollision(playerAABB, goalAABB)) {
+		goalReached_ = true;
+	}
 }
+
 
 void GameScene::ChangePhase() {
 	switch (phase_) {
@@ -157,6 +205,10 @@ void GameScene::ChangePhase() {
 
 		if (deathParticles_) {
 			deathParticles_->Update();
+		}
+		if (goalReached_) {
+			finished_ = true;
+			return;
 		}
 
 		if (player_->IsDead()) {
@@ -260,6 +312,12 @@ void GameScene::Draw() {
 	if (deathParticles_) {
 		deathParticles_->Draw();
 	}
+
+	 //Goal
+	if (goalModel_) {
+		goalModel_->Draw(goalTransform_, viewProjection_);
+	}
+
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion

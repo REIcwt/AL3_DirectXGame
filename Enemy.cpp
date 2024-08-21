@@ -22,6 +22,8 @@ void Enemy::Initialize(Model* model, ViewProjection* viewProjection, const Vecto
 }
 
 void Enemy::Update() {
+
+	  CheckCollisionWithWalls();
 	worldTransform_.translation_.x += velocity_.x;
 
 	walkTimer_ += 0.01f;
@@ -54,6 +56,32 @@ const AABB Enemy::GetAABB() {
 	aabb.max = {worldPos.x + kWidth / 2.0f, worldPos.y + kHeight / 2.0f, worldPos.z + kWidth / 2.0f};
 
 	return aabb;
+}
+
+void Enemy::CheckCollisionWithWalls() {
+	Vector3 leftCorner = {worldTransform_.translation_.x - kWidth / 2.0f, worldTransform_.translation_.y, 0};
+	MapChipField::IndexSet leftIndexSet = mapChipField_->GetMapChipIndexSetByPosition(leftCorner);
+	MapChipType leftChipType = mapChipField_->GetMapChipTypeByIndex(leftIndexSet.xIndex, leftIndexSet.yIndex);
+
+	if (leftChipType == MapChipType::kBlock && velocity_.x < 0) {
+		ReverseDirection();
+	}
+
+	Vector3 rightCorner = {worldTransform_.translation_.x + kWidth / 2.0f, worldTransform_.translation_.y, 0};
+	MapChipField::IndexSet rightIndexSet = mapChipField_->GetMapChipIndexSetByPosition(rightCorner);
+	MapChipType rightChipType = mapChipField_->GetMapChipTypeByIndex(rightIndexSet.xIndex, rightIndexSet.yIndex);
+
+	if (rightChipType == MapChipType::kBlock && velocity_.x > 0) {
+		ReverseDirection();
+	}
+}
+
+void Enemy::ReverseDirection() {
+	velocity_.x = -velocity_.x;
+	worldTransform_.rotation_.y += float(M_PI); 
+	if (worldTransform_.rotation_.y >= 2 * float(M_PI)) {
+		worldTransform_.rotation_.y -= 2 * float(M_PI);
+	}
 }
 
 void Enemy::OnCollision(const Player* player) { (void)player; }

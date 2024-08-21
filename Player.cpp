@@ -30,7 +30,7 @@ void Player::moveInput() {
 	Vector3 acceleration = {};
 
 	// left-right
-	if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
+	if (Input::GetInstance()->PushKey(DIK_D)) {
 		if (velocity_.x < 0.0f) {
 			velocity_.x *= (1.0f - kAcceleration);
 		}
@@ -40,7 +40,7 @@ void Player::moveInput() {
 			turnTimer_ = kTimeTurn;
 			lrDirection_ = LRDirection::kRight;
 		}
-	} else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
+	} else if (Input::GetInstance()->PushKey(DIK_A)) {
 		if (velocity_.x > 0.0f) {
 			velocity_.x *= (1.0f - kAcceleration);
 		}
@@ -75,7 +75,7 @@ void Player::moveInput() {
 
 	// jump
 	if (onGround_) {
-		if (Input::GetInstance()->PushKey(DIK_UP)) {
+		if (Input::GetInstance()->PushKey(DIK_SPACE)) {
 			velocity_.y = kJumpAcceleration;
 			onGround_ = false;
 		}
