@@ -139,7 +139,6 @@ private:
 
 	// Goal 
 	Model* goalModel_ = nullptr;
-	uint32_t goalTextureHandle_ = 0;
 	WorldTransform goalTransform_;
 	bool goalReached_ = false;
 };

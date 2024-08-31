@@ -109,7 +109,7 @@ void GameScene::Initialize() {
 	 enemies_.push_back(sixEnemy);
 
 	 //Goal
-	 goalModel_ = modelPlayer_; 
+	 goalModel_ = Model::CreateFromOBJ("goal", true);
 	 goalTransform_.Initialize();
 	 goalTransform_.translation_ = mapChipField_->GetMapChipPositionByIndex(98, 18);
 	 goalTransform_.UpdateMatrix();
@@ -186,7 +186,7 @@ void GameScene::ChangePhase() {
 	case GameScene::Phase::kPlay:
 		skydome_->Update();
 		player_->Update();
-
+		
 		for (Enemy* enemy : enemies_) {
 			enemy->Update();
 		}
