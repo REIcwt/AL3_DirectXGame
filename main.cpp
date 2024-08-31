@@ -83,7 +83,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// ゲームウィンドウの作成
 	win = WinApp::GetInstance();
-	win->CreateGameWindow(L"GC2B_09_シュウ_エイトウ_AL3");
+	win->CreateGameWindow(L"GC2B_09_シュウ_エイトウ_CROSS");
 
 	// DirectX初期化処理
 	dxCommon = DirectXCommon::GetInstance();
